@@ -5,12 +5,14 @@ cargo install --git https://github.com/misssonder/chatgpt-cli
 ```
 ## Usage
 ```shell
-Simple ChatGPT command line
+ChatGPT command line thar support multiple prompts
 
-Usage: chatgpt --api-key <API_KEY>
+Usage: chatgpt [OPTIONS] --api-key <API_KEY>
 
 Options:
   -a, --api-key <API_KEY>  Api key of the openai support
+  -p, --prompt             Customize the prompt?
   -h, --help               Print help
   -V, --version            Print version
+
 ```
