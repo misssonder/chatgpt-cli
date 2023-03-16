@@ -23,6 +23,10 @@ pub struct Client {
     model: String,
     #[builder(default = "4096")]
     max_token: usize,
+    #[builder(
+        default = "\"You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible.\nKnowledge cutoff: 2021-09-01\".to_string()"
+    )]
+    system_message: String,
     #[builder(setter(skip))]
     history_messages: HashMap<String, HistoryMessage>,
 }
@@ -54,6 +58,10 @@ impl Client {
     async fn build_messages(&mut self, text: String, parent_id: Option<String>) -> Vec<Message> {
         let mut messages = Vec::new();
         messages.push(Message {
+            role: "system".to_string(),
+            content: self.system_message.clone(),
+        });
+        messages.push(Message {
             role: "user".to_string(),
             content: text,
         });
@@ -80,7 +88,7 @@ impl Client {
                             if total_token > self.max_token {
                                 break;
                             };
-                            messages.insert(0, parent_message.message.clone());
+                            messages.insert(1, parent_message.message.clone());
                             match parent_message.clone().parent_id {
                                 None => break,
                                 Some(id) => parent_id = id,
@@ -253,7 +261,7 @@ mod tests {
             .build_messages("hello".to_string(), ids.last().map(|x| x.to_string()))
             .await;
         println!("{:#?}", messages);
-        assert_eq!(messages.len(), 11)
+        assert_eq!(messages.len(), 12)
     }
 
     #[tokio::test]
