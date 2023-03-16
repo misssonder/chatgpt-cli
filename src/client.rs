@@ -12,7 +12,7 @@ use std::string::ToString;
 lazy_static! {
     static ref API_URL: String = String::from("https://api.openai.com/v1/chat/completions");
 }
-
+#[allow(dead_code)]
 #[derive(Builder)]
 pub struct Client {
     #[builder(private)]
@@ -105,7 +105,7 @@ impl Client {
         &mut self,
         req: ChatRequest,
     ) -> ChatGptResult<impl Stream<Item = ChatGptResult<ChatStreamResponse>>> {
-        let mut stream = self
+        let stream = self
             .client
             .post(API_URL.clone())
             .json(&req)
