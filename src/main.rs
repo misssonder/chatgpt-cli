@@ -24,18 +24,7 @@ async fn main() -> ChatGptResult<()> {
     let mut client = Client::new(args.api_key.clone())?;
 
     if args.prompt {
-        let selected_prompt = Select::new(
-            "Select system prompt",
-            Prompt::iter().map(|p| p.to_string()).collect(),
-        )
-        .prompt();
-        client = match selected_prompt {
-            Ok(system_prompt) => ClientBuilder::default()
-                .api_key(args.api_key)
-                .system_message(PROMPTS.get(&system_prompt).unwrap().into())
-                .build()?,
-            Err(_) => Client::new(args.api_key)?,
-        };
+        client = build_with_prompt(args.api_key.clone())?;
     }
 
     let mut parent_id = None;
@@ -52,4 +41,20 @@ async fn main() -> ChatGptResult<()> {
         }
     }
     Ok(())
+}
+
+fn build_with_prompt(api_key: String) -> ChatGptResult<Client> {
+    let selected_prompt = Select::new(
+        "Select system prompt",
+        Prompt::iter().map(|p| p.to_string()).collect(),
+    )
+        .prompt();
+    let client = match selected_prompt {
+        Ok(system_prompt) => ClientBuilder::default()
+            .api_key(api_key)
+            .system_message(PROMPTS.get(&system_prompt).unwrap().into())
+            .build()?,
+        Err(_) => Client::new(api_key)?
+    };
+    Ok(client)
 }
