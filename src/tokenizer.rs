@@ -1,4 +1,4 @@
-use tiktoken_rs::tiktoken::cl100k_base;
+use tiktoken_rs::cl100k_base;
 
 pub fn encode(input: &str) -> Vec<usize> {
     let bpe = cl100k_base().unwrap();
