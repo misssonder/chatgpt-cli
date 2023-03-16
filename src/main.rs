@@ -13,7 +13,7 @@ struct Args {
     /// Api key of the openai support
     #[arg(short, long)]
     api_key: String,
-    /// Customize the prompt?
+    /// Customize the prompt
     #[arg(short, long)]
     prompt: bool,
 }

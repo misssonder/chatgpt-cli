@@ -11,7 +11,7 @@ Usage: chatgpt [OPTIONS] --api-key <API_KEY>
 
 Options:
   -a, --api-key <API_KEY>  Api key of the openai support
-  -p, --prompt             Customize the prompt?
+  -p, --prompt             Customize the prompt
   -h, --help               Print help
   -V, --version            Print version
 
