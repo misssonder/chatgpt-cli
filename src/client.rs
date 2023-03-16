@@ -1,4 +1,4 @@
-use crate::error::{ChatGptError, ChatGptResult};
+use crate::error::{ChatGPTError, ChatGPTResult};
 use crate::tokenizer::encode;
 use crate::types::{ChatRequest, ChatResponse, ChatStreamResponse, HistoryMessage, Message};
 use derive_builder::Builder;
@@ -51,7 +51,7 @@ impl ClientBuilder {
 }
 
 impl Client {
-    pub fn new(api_key: String) -> ChatGptResult<Self> {
+    pub fn new(api_key: String) -> ChatGPTResult<Self> {
         Ok(ClientBuilder::default().api_key(api_key).build()?)
     }
 
@@ -104,7 +104,7 @@ impl Client {
     async fn get_chat_stream(
         &mut self,
         req: ChatRequest,
-    ) -> ChatGptResult<impl Stream<Item = ChatGptResult<ChatStreamResponse>>> {
+    ) -> ChatGPTResult<impl Stream<Item = ChatGPTResult<ChatStreamResponse>>> {
         let stream = self
             .client
             .post(API_URL.clone())
@@ -129,7 +129,7 @@ impl Client {
         &mut self,
         text: String,
         parent_id: Option<String>,
-    ) -> ChatGptResult<(String, String)> {
+    ) -> ChatGPTResult<(String, String)> {
         let req = ChatRequest {
             model: self.model.clone(),
             messages: self.build_messages(text.clone(), parent_id.clone()).await,
@@ -144,16 +144,16 @@ impl Client {
             .json()
             .await?;
         if let Some(err) = resp.error {
-            return Err(ChatGptError::ChatGtp(err.message));
+            return Err(ChatGPTError::ChatGtp(err.message));
         }
 
         match resp.choices {
-            None => Err(ChatGptError::ChatGtp(format!("response choices is none"))),
+            None => Err(ChatGPTError::ChatGtp(format!("response choices is none"))),
             Some(choices) => {
                 let req_id = uuid::Uuid::new_v4().to_string();
                 let resp_id = resp
                     .id
-                    .ok_or(ChatGptError::ChatGtp(format!("response id is none")))?;
+                    .ok_or(ChatGPTError::ChatGtp(format!("response id is none")))?;
                 self.history_messages.insert(
                     req_id.to_string(),
                     HistoryMessage {
@@ -182,7 +182,7 @@ impl Client {
         &mut self,
         text: String,
         parent_id: Option<String>,
-    ) -> ChatGptResult<impl Stream<Item = ChatGptResult<String>>> {
+    ) -> ChatGPTResult<impl Stream<Item = ChatGPTResult<String>>> {
         let req = ChatRequest {
             model: self.model.clone(),
             messages: self.build_messages(text.clone(), parent_id.clone()).await,
@@ -198,7 +198,7 @@ mod tests {
     use super::*;
 
     #[tokio::test]
-    async fn test_get_chat_stream() -> ChatGptResult<()> {
+    async fn test_get_chat_stream() -> ChatGPTResult<()> {
         let mut client = Client::new("".into())?;
         let req = ChatRequest {
             model: client.model.clone(),
@@ -216,7 +216,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_send_message() -> ChatGptResult<()> {
+    async fn test_send_message() -> ChatGPTResult<()> {
         let mut client = Client::new("".to_string()).unwrap();
         let (resp, resp_id) = client
             .send_message(
@@ -265,7 +265,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_send_message_stream() -> ChatGptResult<()> {
+    async fn test_send_message_stream() -> ChatGPTResult<()> {
         let mut client = Client::new("".to_string())?;
         let mut stream = client
             .send_message_stream("hello! who are you?".to_string(), None)

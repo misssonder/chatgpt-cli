@@ -1,10 +1,10 @@
 use crate::client::ClientBuilderError;
 use thiserror::Error;
 
-pub type ChatGptResult<T> = Result<T, ChatGptError>;
+pub type ChatGPTResult<T> = Result<T, ChatGPTError>;
 
 #[derive(Error, Debug)]
-pub enum ChatGptError {
+pub enum ChatGPTError {
     #[error("reqwest_error: {0}")]
     Reqwest(#[from] reqwest::Error),
     #[error("serde_error: {0}")]

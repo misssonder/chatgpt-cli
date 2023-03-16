@@ -1,5 +1,5 @@
 use chatgpt::client::{Client, ClientBuilder};
-use chatgpt::error::ChatGptResult;
+use chatgpt::error::ChatGPTResult;
 use chatgpt::prompt::{Prompt, PROMPTS};
 use clap::Parser;
 use inquire::{Select, Text};
@@ -19,7 +19,7 @@ struct Args {
 }
 
 #[tokio::main]
-async fn main() -> ChatGptResult<()> {
+async fn main() -> ChatGPTResult<()> {
     let args = Args::parse();
     let mut client = Client::new(args.api_key.clone())?;
 
@@ -43,7 +43,7 @@ async fn main() -> ChatGptResult<()> {
     Ok(())
 }
 
-fn build_with_prompt(api_key: String) -> ChatGptResult<Client> {
+fn build_with_prompt(api_key: String) -> ChatGPTResult<Client> {
     let selected_prompt = Select::new(
         "Select system prompt",
         Prompt::iter().map(|p| p.to_string()).collect(),
@@ -52,7 +52,7 @@ fn build_with_prompt(api_key: String) -> ChatGptResult<Client> {
     let client = match selected_prompt {
         Ok(system_prompt) => ClientBuilder::default()
             .api_key(api_key)
-            .system_message(PROMPTS.get(&system_prompt).unwrap().into())
+            .system_message(PROMPTS.get(&system_prompt).expect("get not key from prompts").into())
             .build()?,
         Err(_) => Client::new(api_key)?
     };
