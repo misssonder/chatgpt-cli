@@ -1,8 +1,10 @@
-use chatgpt::client::Client;
+use chatgpt::client::{Client, ClientBuilder};
 use chatgpt::error::ChatGptResult;
+use chatgpt::prompt::{Prompt, PROMPTS};
 use clap::Parser;
-use inquire::Text;
+use inquire::{Select, Text};
 use spinners::{Spinner, Spinners};
+use strum::IntoEnumIterator;
 
 /// Simple ChatGPT command line
 #[derive(Parser, Debug)]
@@ -11,12 +13,31 @@ struct Args {
     /// Api key of the openai support
     #[arg(short, long)]
     api_key: String,
+    /// Customize the prompt?
+    #[arg(short, long)]
+    prompt: bool,
 }
 
 #[tokio::main]
 async fn main() -> ChatGptResult<()> {
     let args = Args::parse();
-    let mut client = Client::new(args.api_key)?;
+    let mut client = Client::new(args.api_key.clone())?;
+
+    if args.prompt {
+        let selected_prompt = Select::new(
+            "Select system prompt",
+            Prompt::iter().map(|p| p.to_string()).collect(),
+        )
+        .prompt();
+        client = match selected_prompt {
+            Ok(system_prompt) => ClientBuilder::default()
+                .api_key(args.api_key)
+                .system_message(PROMPTS.get(&system_prompt).unwrap().into())
+                .build()?,
+            Err(_) => Client::new(args.api_key)?,
+        };
+    }
+
     let mut parent_id = None;
     loop {
         let message = Text::new("Your question:").prompt();
