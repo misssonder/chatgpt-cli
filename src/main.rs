@@ -48,13 +48,18 @@ fn build_with_prompt(api_key: String) -> ChatGPTResult<Client> {
         "Select system prompt",
         Prompt::iter().map(|p| p.to_string()).collect(),
     )
-        .prompt();
+    .prompt();
     let client = match selected_prompt {
         Ok(system_prompt) => ClientBuilder::default()
             .api_key(api_key)
-            .system_message(PROMPTS.get(&system_prompt).expect("get not key from prompts").into())
+            .system_message(
+                PROMPTS
+                    .get(&system_prompt)
+                    .expect("get not key from prompts")
+                    .into(),
+            )
             .build()?,
-        Err(_) => Client::new(api_key)?
+        Err(_) => Client::new(api_key)?,
     };
     Ok(client)
 }

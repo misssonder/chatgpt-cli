@@ -1,4 +1,5 @@
 use crate::error::{ChatGPTError, ChatGPTResult};
+use crate::prompt::{Prompt, PROMPTS};
 use crate::tokenizer::encode;
 use crate::types::{ChatRequest, ChatResponse, ChatStreamResponse, HistoryMessage, Message};
 use derive_builder::Builder;
@@ -23,9 +24,7 @@ pub struct Client {
     model: String,
     #[builder(default = "4096")]
     max_token: usize,
-    #[builder(
-        default = "\"You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible.\nKnowledge cutoff: 2021-09-01\".to_string()"
-    )]
+    #[builder(default = "PROMPTS.get(&Prompt::Default.to_string()).unwrap().into()")]
     system_message: String,
     #[builder(setter(skip))]
     history_messages: HashMap<String, HistoryMessage>,
