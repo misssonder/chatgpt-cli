@@ -31,3 +31,14 @@ lazy_static! {
         }
     };
 }
+#[cfg(test)]
+mod tests {
+    use strum::IntoEnumIterator;
+    use super::*;
+
+    #[test]
+    fn it() {
+        let ps:Vec<_>=Prompt::iter().map(|x|x.to_string()).collect();
+        println!("{:?}", ps);
+    }
+}

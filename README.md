@@ -16,3 +16,17 @@ Options:
   -V, --version            Print version
 
 ```
+### Prompts
+#### support prompts
+![](./images/prompts.png)
+- Default 
+- LinuxTerminal 
+- Translator
+- Interviewer
+- JavaScriptConsole
+- ExcelSheet
+- EnglishPronunciation
+- EnglishTeacher
+- TravelGuide
+
+you can click [awesome-chatgpt-prompts](https://github.com/f/awesome-chatgpt-prompts) to know more about chatGPT system prompt.
