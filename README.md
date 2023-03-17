@@ -4,6 +4,7 @@
 cargo install --git https://github.com/misssonder/chatgpt-cli
 ```
 ## Usage
+Get API key from [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys)
 ```shell
 ChatGPT command line thar support multiple prompts
 
