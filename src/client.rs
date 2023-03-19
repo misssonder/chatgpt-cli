@@ -21,7 +21,7 @@ pub struct Client {
     #[builder(setter(custom))]
     api_key: String,
     #[builder(default = "\"gpt-3.5-turbo\".to_string()")]
-    model: String,
+    pub model: String,
     #[builder(default = "4096")]
     max_token: usize,
     #[builder(default = "PROMPTS.get(&Prompt::Default.to_string()).unwrap().into()")]

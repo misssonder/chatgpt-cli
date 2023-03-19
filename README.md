@@ -13,6 +13,7 @@ Usage: chatgpt [OPTIONS] --api-key <API_KEY>
 Options:
   -a, --api-key <API_KEY>  Api key of the openai support
   -p, --prompt             Customize the prompt
+  -m, --model <MODEL>      Set the chatGPT model, default value is 'gpt-3.5-turbo'
   -h, --help               Print help
   -V, --version            Print version
 
