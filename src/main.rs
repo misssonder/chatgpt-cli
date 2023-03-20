@@ -6,7 +6,7 @@ use inquire::{Select, Text};
 use spinners::{Spinner, Spinners};
 use strum::IntoEnumIterator;
 
-/// ChatGPT command line thar support multiple prompts.
+/// ChatGPT command line that support multiple prompts.
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
