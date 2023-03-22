@@ -99,11 +99,11 @@ jobs:
         run: |
           staging="chatgpt-${{ needs.create-release.outputs.rg_version }}-${{ matrix.target }}"
           if [ "${{ matrix.build }}" = "windows" ]; then
-            cp "../target/${{ matrix.target }}/release/chatgpt.exe" ./
+            cp "target/${{ matrix.target }}/release/chatgpt.exe" ./
             7z a "$staging.zip" README.md chatgpt.exe
             echo "ASSET=$staging.zip" >> $GITHUB_ENV
           else
-            cp "../target/${{ matrix.target }}/release/chatgpt" ./
+            cp "target/${{ matrix.target }}/release/chatgpt" ./
             tar -czf "$staging.tar.gz" README.md chatgpt
             echo "ASSET=$staging.tar.gz" >> $GITHUB_ENV
           fi
