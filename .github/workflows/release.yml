@@ -61,17 +61,14 @@ jobs:
             os: ubuntu-18.04
             rust: nightly
             target: x86_64-unknown-linux-musl
-            archive-name: sgf-render-linux.tar.gz
           - build: macos
             os: macos-latest
             rust: nightly
             target: x86_64-apple-darwin
-            archive-name: sgf-render-macos.tar.gz
           - build: windows
             os: windows-2019
             rust: nightly-x86_64-msvc
             target: x86_64-pc-windows-msvc
-            archive-name: sgf-render-windows.7z
       fail-fast: false
 
     steps:
@@ -93,23 +90,30 @@ jobs:
 
       - name: Strip binary (linux and macos)
         if: matrix.build == 'linux' || matrix.build == 'macos'
-        run: strip "target/${{ matrix.target }}/release/sgf-render"
+        run: strip "target/${{ matrix.target }}/release/chatgpt"
 
       - name: Build archive
         shell: bash
         run: |
           mkdir archive
-          cp LICENSE README.md archive/
+          staging="chatgpt-${{ needs.create-release.outputs.rg_version }}-${{ matrix.target }}"
+          cp README.md archive/
           cd archive
           if [ "${{ matrix.build }}" = "windows" ]; then
-            cp "../target/${{ matrix.target }}/release/sgf-render.exe" ./
-            7z a "${{ matrix.archive-name }}" LICENSE README.md sgf-render.exe
+            cp "../target/${{ matrix.target }}/release/chatgpt.exe" ./
+            7z a "$staging.zip" README.md chatgpt.exe
+            echo "ASSET=$staging.zip" >> $GITHUB_ENV
           else
-            cp "../target/${{ matrix.target }}/release/sgf-render" ./
-            tar -czf "${{ matrix.archive-name }}" LICENSE README.md sgf-render
+            cp "../target/${{ matrix.target }}/release/chatgpt" ./
+            tar -czf "$staging.tar.gz" README.md chatgpt
+            echo "ASSET=$staging.tar.gz" >> $GITHUB_ENV
           fi
-      - name: Upload archive
-        uses: actions/upload-artifact@v1
+      - name: Upload release archive
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: ${{ matrix.archive-name }}
-          path: archive/${{ matrix.archive-name }}
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ${{ env.ASSET }}
+          asset_name: ${{ env.ASSET }}
+          asset_content_type: application/octet-stream
