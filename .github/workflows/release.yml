@@ -97,10 +97,7 @@ jobs:
       - name: Build archive
         shell: bash
         run: |
-          mkdir archive
           staging="chatgpt-${{ needs.create-release.outputs.rg_version }}-${{ matrix.target }}"
-          cp README.md archive/
-          cd archive
           if [ "${{ matrix.build }}" = "windows" ]; then
             cp "../target/${{ matrix.target }}/release/chatgpt.exe" ./
             7z a "$staging.zip" README.md chatgpt.exe

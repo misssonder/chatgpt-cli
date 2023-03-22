@@ -1,0 +1,2 @@
+[dependencies]
+openssl = { version = "0.1", features = ["vendored"] }
