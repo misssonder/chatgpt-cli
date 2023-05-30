@@ -143,16 +143,16 @@ impl Client {
             .json()
             .await?;
         if let Some(err) = resp.error {
-            return Err(ChatGPTError::ChatGtp(err.message));
+            return Err(ChatGPTError::ChatGPT(err.message));
         }
 
         match resp.choices {
-            None => Err(ChatGPTError::ChatGtp(format!("response choices is none"))),
+            None => Err(ChatGPTError::ChatGPT(format!("response choices is none"))),
             Some(choices) => {
                 let req_id = uuid::Uuid::new_v4().to_string();
                 let resp_id = resp
                     .id
-                    .ok_or(ChatGPTError::ChatGtp(format!("response id is none")))?;
+                    .ok_or(ChatGPTError::ChatGPT(format!("response id is none")))?;
                 self.history_messages.insert(
                     req_id.to_string(),
                     HistoryMessage {

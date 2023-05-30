@@ -10,7 +10,7 @@ pub enum ChatGPTError {
     #[error("serde_error: {0}")]
     Serde(#[from] serde_json::Error),
     #[error("chatgpt_error: {0}")]
-    ChatGtp(String),
+    ChatGPT(String),
     #[error("invalid_header: {0}")]
     InvalidHeaderValue(#[from] reqwest::header::InvalidHeaderValue),
     #[error("builder_error: {0}")]
